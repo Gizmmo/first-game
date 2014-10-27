@@ -12,6 +12,9 @@ var mainState = {
 	create: function() {
 		// This function is called after the preload function
 		//  Here we set up the game, display sprites, etc.
+		//  
+		 
+		 game.stage.backgroundColor = '#3498db';
 	},
 
 	update: function() {
