@@ -12,6 +12,7 @@ var mainState = {
 		game.load.image('wallV', 'assets/wallVertical.png');
 		game.load.image('wallH', 'assets/wallHorizontal.png');
 		game.load.image('coin', 'assets/coin.png');
+		game.load.image('enemy', 'assets/enemy.png');
 
 	},
 	create: function() {
@@ -27,6 +28,15 @@ var mainState = {
 		this.player.anchor.setTo(0.5, 0.5);
 		this.cursor = game.input.keyboard.createCursorKeys();
 		this.createWorld();
+		this.enemies = game.add.group();
+		this.enemies.enableBody = true;
+
+		//Create 10 enemies with the enemy image in the group
+		//The enemies are dead by default, so they are not visible in game
+		this.enemies.createMultiple(10, 'enemy');
+
+		//Call 'addEnemy every 2.2 seconds'
+		game.time.events.loop(2200, this.addEnemy, this);
 
 		//Display the coin
 		this.coin = game.add.sprite(60, 140, 'coin');
@@ -60,11 +70,36 @@ var mainState = {
 		game.physics.arcade.collide(this.player, this.walls);
 		game.physics.arcade.overlap(this.player, this.coin, this.takeCoin, null, this);
 
+		//Make the enemies and walls collide
+		game.physics.arcade.collide(this.enemies, this.walls);
+
+		//call the playerDie function when the player and enemy overlap
+		game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
+
 		this.movePlayer();
 
 		if (!this.player.inWorld) {
 			this.playerDie();
 		}
+	},
+
+	addEnemy: function () {
+		//Get the first dead enemy of the group
+		var enemy = this.enemies.getFirstDead();
+
+		//If there isnt any dead enemies, do nothing
+		if(!enemy) {
+			return;
+		}
+
+		//Initialize the enemy
+		enemy.anchor.setTo(0.5, 1);
+		enemy.reset(game.world.centerX, 0);
+		enemy.body.gravity.y = 500;
+		enemy.body.velocity.x = 100 * Phaser.Math.randomSign();
+		enemy.body.bounce.x = 1;
+		enemy.checkWorldBounds = true;
+		enemy.outOfBoundsKill = true;
 	},
 
 	createWorld: function() {
