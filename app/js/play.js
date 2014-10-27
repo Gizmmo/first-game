@@ -163,6 +163,8 @@ var playState = {
 	},
 
 	takeCoin: function(player, coin) {
+		//Player grows when grabbing a coin
+		game.add.tween(this.player.scale).to({x: 1.3, y: 1.3}, 50).to({x: 1, y: 1}, 150).start();
 
 		//Increase score by 5
 		game.global.score += 5;
@@ -177,6 +179,11 @@ var playState = {
 	},
 
 	updateCoinPosition: function() {
+		//The coin grows into position
+		this.coin.scale.setTo(0, 0);
+		game.add.tween(this.coin.scale).to({x: 1, y: 1}, 300).start();
+
+
 		var coinPosition = [{
 			x: 140,
 			y: 60
