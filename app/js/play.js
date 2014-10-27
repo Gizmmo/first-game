@@ -25,43 +25,14 @@ var playState = {
 	},
 
 	update: function() {
-		// This function is called 60 times per second 
-		// It contains the game's logic
 
-		//Tell Phaser that the player and walls should collide
-		game.physics.arcade.collide(this.player, this.layer);
-		game.physics.arcade.overlap(this.player, this.coin, this.takeCoin, null, this);
-
-		//Make the enemies and walls collide
-		game.physics.arcade.collide(this.enemies, this.layer);
-
-		//call the playerDie function when the player and enemy overlap
-		game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
+		this.updatePhysics();
 
 		this.movePlayer();
 
-		//If the nextEnemy time has passed
-		if (this.nextEnemy < game.time.now) {
+		this.spawnEnemy();
 
-			//Define some variables were going to use
-			var start = 4000,
-				end = 1000,
-				score = 100;
-
-			//Formula to decrease the delay between enemies over time
-			//at first its 4000ms then slowly reaches 1000 ms
-
-			var delay = Math.max(start - (start - end) * game.global.score / score, end);
-			//We Add an enemy
-			this.addEnemy();
-
-			//And we update the nextEnemy variable t have a new enemy in 2.2 seconds
-			this.nextEnemy = game.time.now + delay;
-		}
-
-		if (!this.player.inWorld) {
-			this.playerDie();
-		}
+		this.playerDie();
 	},
 
 	addEnemy: function() {
@@ -222,23 +193,46 @@ var playState = {
 	},
 
 	playerDie: function() {
+		if (!this.player.inWorld) {
 
-		if (!this.player.alive) {
-			return;
+			if (!this.player.alive) {
+				return;
+			}
+			//Kill the player to make it dissappear from the screen
+			this.player.kill();
+
+			//Start the sound and particles
+			this.deadSound.play();
+			this.emitter.x = this.player.x;
+			this.emitter.y = this.player.y;
+
+			//Start the emitter, by exploding 15 particles that will live for 600ms
+			this.emitter.start(true, 600, null, 15);
+
+			//Cal the startMenu function after 1000ms
+			game.time.events.add(1000, this.startMenu, this);
 		}
-		//Kill the player to make it dissappear from the screen
-		this.player.kill();
+	},
 
-		//Start the sound and particles
-		this.deadSound.play();
-		this.emitter.x = this.player.x;
-		this.emitter.y = this.player.y;
+	spawnEnemy: function() {
+		//If the nextEnemy time has passed
+		if (this.nextEnemy < game.time.now) {
 
-		//Start the emitter, by exploding 15 particles that will live for 600ms
-		this.emitter.start(true, 600, null, 15);
+			//Define some variables were going to use
+			var start = 4000,
+				end = 1000,
+				score = 100;
 
-		//Cal the startMenu function after 1000ms
-		game.time.events.add(1000, this.startMenu, this);
+			//Formula to decrease the delay between enemies over time
+			//at first its 4000ms then slowly reaches 1000 ms
+
+			var delay = Math.max(start - (start - end) * game.global.score / score, end);
+			//We Add an enemy
+			this.addEnemy();
+
+			//And we update the nextEnemy variable t have a new enemy in 2.2 seconds
+			this.nextEnemy = game.time.now + delay;
+		}
 	},
 
 	startMenu: function() {
@@ -309,6 +303,18 @@ var playState = {
 
 		//Set the new position of the coin
 		this.coin.reset(newPosition.x, newPosition.y);
+	},
+
+	updatePhysics: function() {
+		//Tell Phaser that the player and walls should collide
+		game.physics.arcade.collide(this.player, this.layer);
+		game.physics.arcade.overlap(this.player, this.coin, this.takeCoin, null, this);
+
+		//Make the enemies and walls collide
+		game.physics.arcade.collide(this.enemies, this.layer);
+
+		//call the playerDie function when the player and enemy overlap
+		game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
 	}
 
 };
