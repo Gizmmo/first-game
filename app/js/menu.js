@@ -37,8 +37,13 @@ var menuState = {
 		})
 		scoreLabel.anchor.setTo(0.5, 0.5);
 
+		if (game.device.desktop) {
+			text = 'press the up arrow key to start';
+		} else {
+			var text = 'touch the screen to start';
+		}
 		//Explain how to start the game
-		var startLabel = game.add.text(game.world.centerX, game.world.height - 80, 'press the up arrow key to start', {
+		var startLabel = game.add.text(game.world.centerX, game.world.height - 80, text, {
 			font: '25px Geo',
 			fill: '#ffffff'
 		});
@@ -54,6 +59,8 @@ var menuState = {
 
 		//Create a new Phaser keyboard variable: the up arrow key
 		upKey.onDown.addOnce(this.start, this);
+		//Used for touch events
+		game.input.onDown.addOnce(this.start, this)
 
 		//Add the mute button that calls the toggleSound function when pressed
 		this.muteButton = game.add.button(20, 20, 'mute', this.toggleSound, this);
