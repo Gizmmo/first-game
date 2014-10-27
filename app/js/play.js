@@ -18,6 +18,10 @@ var playState = {
 		this.enemies = game.add.group();
 		this.enemies.enableBody = true;
 
+		this.jumpSound = game.add.audio('jump');
+		this.coinSound = game.add.audio('coin');
+		this.deadSound = game.add.audio('dead');
+
 		//Create 10 enemies with the enemy image in the group
 		//The enemies are dead by default, so they are not visible in game
 		this.enemies.createMultiple(10, 'enemy');
@@ -138,12 +142,14 @@ var playState = {
 		if (this.cursor.up.isDown && this.player.body.touching.down) {
 			//Move the player upward (jump)
 			this.player.body.velocity.y = -320;
+			this.jumpSound.play();
 		}
 	},
 
 	playerDie: function() {
 		//When  the player dies, we send the user ot the menu
 		game.state.start('menu');
+		this.deadSound.play();
 	},
 
 	takeCoin: function(player, coin) {
@@ -156,6 +162,8 @@ var playState = {
 
 		//Change the coin position
 		this.updateCoinPosition();
+
+		this.coinSound.play();
 	},
 
 	updateCoinPosition: function() {
