@@ -21,6 +21,13 @@ var mainState = {
 
 		 //Create local variable
 		 this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+		 this.player.anchor.setTo(0.5, 0.5);
+
+		 //Tell Phaser that the player will use the Arcade physics engine
+		 game.physics.arcade.enable(this.player);
+
+		 //Add verticle gravity to the player
+		 this.player.body.gravity.y = 500;
 	},
 
 	update: function() {
