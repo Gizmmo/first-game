@@ -18,6 +18,9 @@ var loadState = {
 		//Load player spritesheet
 		game.load.spritesheet('player', 'assets/player2.png', 20, 20);
 
+		//Load mute button spritesheet
+		game.load.spritesheet('mute', 'assets/muteButton.png', 28, 22);
+
 		//Load a new asset that we will use in the menu state
 		game.load.image('background', 'assets/background.png');
 
@@ -29,7 +32,7 @@ var loadState = {
 
 		//Sound when the player dies
 		game.load.audio('dead', ['assets/dead.ogg', 'assets/dead.mp3']);
-		
+
 		//Used in the particle animations of a players death
 		game.load.image('pixel', 'assets/pixel.png');
 	},
