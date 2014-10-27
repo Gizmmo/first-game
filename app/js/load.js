@@ -29,6 +29,9 @@ var loadState = {
 
 		//Sound when the player dies
 		game.load.audio('dead', ['assets/dead.ogg', 'assets/dead.mp3']);
+		
+		//Used in the particle animations of a players death
+		game.load.image('pixel', 'assets/pixel.png');
 	},
 
 	create: function() {

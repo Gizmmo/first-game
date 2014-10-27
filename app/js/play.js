@@ -18,6 +18,23 @@ var playState = {
 		this.enemies = game.add.group();
 		this.enemies.enableBody = true;
 
+		//Create the emitter with 15 particles.  We dont need to set the x and y
+		//since we don't know where to do the explosion yet
+		this.emitter = game.add.emitter(0, 0, 15);
+
+		//Set the pixel image for the particles
+		this.emitter.makeParticles('pixel');
+
+		//Set the y speed of the particles between -150 and 150
+		//The speed will randomly be picked between this for each particle
+		this.emitter.setYSpeed(-150, 150);
+
+		//Do the same for the x speed
+		this.emitter.setXSpeed(-150, 150);
+
+		//Use no gravity for the particles
+		this.emitter.gravity = 0;
+
 		//Create the 'right' animation of the player by looping frames 1 and 2
 		this.player.animations.add('right', [1, 2], 8, true);
 
@@ -157,9 +174,23 @@ var playState = {
 	},
 
 	playerDie: function() {
-		//When  the player dies, we send the user ot the menu
-		game.state.start('menu');
+		//Kill the player to make it dissappear from the screen
+		this.player.kill();
+
+		//Start the sound and particles
 		this.deadSound.play();
+		this.emitter.x = this.player.x;
+		this.emitter.y = this.player.y;
+
+		//Start the emitter, by exploding 15 particles that will live for 600ms
+		this.emitter.start(true, 600, null, 15);
+		
+		//Cal the startMenu function after 1000ms
+		game.time.events.add(1000, this.startMenu, this);
+	},
+
+	startMenu: function() {
+		game.state.start('menu');
 	},
 
 	takeCoin: function(player, coin) {
