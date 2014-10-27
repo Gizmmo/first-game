@@ -19,7 +19,7 @@ var menuState = {
 
 		//Display the name of the game
 		var nameLabel = game.add.text(game.world.centerX, -50, 'Super Coin Box', {
-			font: '50px Arial',
+			font: '50px Geo',
 			fill: '#ffffff'
 		});
 		nameLabel.anchor.setTo(0.5, 0.5);
@@ -32,14 +32,14 @@ var menuState = {
 		var text = 'score: ' + game.global.score + '\nbest score: ' + localStorage.getItem('bestScore');
 		//Show the score at the center of the screen
 		var scoreLabel = game.add.text(game.world.centerX, game.world.centerY, text, {
-			font: '25px Arial',
+			font: '25px Geo',
 			fill: '#fffff'
 		})
 		scoreLabel.anchor.setTo(0.5, 0.5);
 
 		//Explain how to start the game
 		var startLabel = game.add.text(game.world.centerX, game.world.height - 80, 'press the up arrow key to start', {
-			font: '25px Arial',
+			font: '25px Geo',
 			fill: '#ffffff'
 		});
 		startLabel.anchor.setTo(0.5, 0.5);

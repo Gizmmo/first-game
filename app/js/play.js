@@ -83,6 +83,7 @@ var playState = {
 			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 			right: game.input.keyboard.addKey(Phaser.Keyboard.D)
 		}
+		
 	},
 
 	update: function() {
