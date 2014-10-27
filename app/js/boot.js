@@ -6,10 +6,10 @@ var bootState = {
 	},
 
 	create: function() {
-		createStageBackground(); //Colors the background
-		createPhysicsSystem(); //Sets the Physics system for the game
-		createMobileDimensions(): //Creates Mobile dimensions if the game is on mobile platform
-		loadNextState(); //Loads the next state
+		this.createStageBackground(); //Colors the background
+		this.createPhysicsSystem(); //Sets the Physics system for the game
+		this.createMobileDimensions(); //Creates Mobile dimensions if the game is on mobile platform
+		this.loadNextState(); //Loads the next state
 	},
 
 	/**
