@@ -33,6 +33,19 @@ var menuState = {
 
 		//Create a new Phaser keyboard variable: the up arrow key
 		upKey.onDown.addOnce(this.start, this);
+
+		//If bestScore is not defined it
+		//means that this is the first time the game is being played
+		if(!localStorage.getItem('bestScore')) {
+			//Then set the best score to 0
+			localStorage.setItem('bestScore', 0);
+		}
+
+		//If the score is higher then the best score
+		if(game.global.score > localStorage.getItem('bestScore')) {
+			//then update the best score
+			localStorage.setItem('bestScore', game.global.score);
+		}
 	},
 
 	start: function() {
