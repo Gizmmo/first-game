@@ -10,11 +10,13 @@ var loadState = {
 		game.load.setPreloadSprite(progressBar);
 
 		//Load all our assets
-		game.load.image('player', 'assets/player.png');
 		game.load.image('enemy', 'assets/enemy.png');
 		game.load.image('coin', 'assets/coin.png');
 		game.load.image('wallV', 'assets/wallVertical.png');
 		game.load.image('wallH', 'assets/wallHorizontal.png');
+
+		//Load player spritesheet
+		game.load.spritesheet('player', 'assets/player2.png', 20, 20);
 
 		//Load a new asset that we will use in the menu state
 		game.load.image('background', 'assets/background.png');

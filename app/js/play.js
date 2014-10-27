@@ -18,6 +18,12 @@ var playState = {
 		this.enemies = game.add.group();
 		this.enemies.enableBody = true;
 
+		//Create the 'right' animation of the player by looping frames 1 and 2
+		this.player.animations.add('right', [1, 2], 8, true);
+
+		//Create the 'left' animations of the player by looping frames 3 and 4
+		this.player.animations.add('left', [3, 4], 8, true);
+
 		this.jumpSound = game.add.audio('jump');
 		this.coinSound = game.add.audio('coin');
 		this.deadSound = game.add.audio('dead');
@@ -124,18 +130,22 @@ var playState = {
 		if (this.cursor.left.isDown) {
 			//Move the player to the left
 			this.player.body.velocity.x = -200;
+			this.player.animations.play('left'); //Start the left animation
 		}
 
 		//If the right arrow is pressed
 		else if (this.cursor.right.isDown) {
 			//Move the player to the right
 			this.player.body.velocity.x = 200;
+			this.player.animations.play('right'); //Start the right animation
 		}
 
 		//If neither the right or left arrow key is pressed
 		else {
 			//Stop the player
 			this.player.body.velocity.x = 0;
+			this.player.animations.stop(); //Stop all animations
+			this.player.frame = 0 //Set the splayer to fram 0, which is stand still
 		}
 
 		//If the up arrow key is pressed and the player is touching the ground
