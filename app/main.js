@@ -7,7 +7,7 @@ var mainState = {
 	preload: function() {
 		// This function will be executed at the beginning 
 		// That's where we load the game's assets
-		
+
 		game.load.image('player', 'assets/player.png');
 		game.load.image('wallV', 'assets/wallVertical.png');
 		game.load.image('wallH', 'assets/wallHorizontal.png');
@@ -18,47 +18,56 @@ var mainState = {
 		// This function is called after the preload function
 		//  Here we set up the game, display sprites, etc.
 		//  
-		 
-		 game.stage.backgroundColor = '#3498db';
-		 game.physics.startSystem(Phaser.Physics.ARCADE);
 
-		 //Create local variable
-		 this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
-		 this.player.anchor.setTo(0.5, 0.5);
-		 this.cursor = game.input.keyboard.createCursorKeys();
-		 this.createWorld();
+		game.stage.backgroundColor = '#3498db';
+		game.physics.startSystem(Phaser.Physics.ARCADE);
 
-		 //Display the coin
-		 this.coin = game.add.sprite(60, 140, 'coin');
+		//Create local variable
+		this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
+		this.player.anchor.setTo(0.5, 0.5);
+		this.cursor = game.input.keyboard.createCursorKeys();
+		this.createWorld();
 
-		 //Add Arcade Physics to coin
-		 game.physics.arcade.enable(this.coin);
+		//Display the coin
+		this.coin = game.add.sprite(60, 140, 'coin');
 
-		 //Set the anchor point of the coin to the center
-		 this.coin.anchor.setTo(0.5, 0.5);
+		//Add Arcade Physics to coin
+		game.physics.arcade.enable(this.coin);
 
-		 //Tell Phaser that the player will use the Arcade physics engine
-		 game.physics.arcade.enable(this.player);
+		//Set the anchor point of the coin to the center
+		this.coin.anchor.setTo(0.5, 0.5);
 
-		 //Add verticle gravity to the player
-		 this.player.body.gravity.y = 500;
+		//Tell Phaser that the player will use the Arcade physics engine
+		game.physics.arcade.enable(this.player);
+
+		//Add verticle gravity to the player
+		this.player.body.gravity.y = 500;
+
+		//Display the score
+		this.scoreLabel = game.add.text(30, 30, 'score: 0', {
+			font: '18px Arial',
+			fill: '#fffff'
+		});
+
+		this.score = 0;
 	},
 
 	update: function() {
 		// This function is called 60 times per second 
 		// It contains the game's logic
-		
+
 		//Tell Phaser that the player and walls should collide
 		game.physics.arcade.collide(this.player, this.walls);
+		game.physics.arcade.overlap(this.player, this.coin, this.takeCoin, null, this);
 
 		this.movePlayer();
 
-		if(!this.player.inWorld) {
+		if (!this.player.inWorld) {
 			this.playerDie();
 		}
 	},
 
-	createWorld: function () {
+	createWorld: function() {
 		//Create our wall group with Arcade physics
 		this.walls = game.add.group();
 		this.walls.enableBody = true;
@@ -84,7 +93,7 @@ var mainState = {
 		this.walls.setAll('body.immovable', true);
 	},
 
-	movePlayer: function () {
+	movePlayer: function() {
 		//If the left arrow key is pressed
 		if (this.cursor.left.isDown) {
 			//Move the player to the left
@@ -112,7 +121,23 @@ var mainState = {
 
 	playerDie: function() {
 		game.state.start('main');
-	}
+	},
+
+	takeCoin: function(player, coin) {
+		//Kill the coin to make it disappear from the game
+		this.coin.kill();
+
+		//Increase score by 5
+		this.score += 5;
+
+		//Update the score label
+		this.scoreLabel.text = 'score: ' + this.score;
+	},
+
+	// updateCoinPosition: function() {
+	// 	var coinPosition = [
+	// 	{x: 140, y: 60}]
+	// }
 
 };
 // We initialising Phaser
