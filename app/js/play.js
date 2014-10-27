@@ -49,8 +49,8 @@ var playState = {
 		//The enemies are dead by default, so they are not visible in game
 		this.enemies.createMultiple(10, 'enemy');
 
-		//Call 'addEnemy every 2.2 seconds'
-		game.time.events.loop(2200, this.addEnemy, this);
+		///Containes the time of the next enemy creation
+		this.nextEnemy = 0;
 
 		//Display the coin
 		this.coin = game.add.sprite(60, 140, 'coin');
@@ -91,6 +91,23 @@ var playState = {
 		game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
 
 		this.movePlayer();
+
+		//If the nextEnemy time has passed
+		if(this.nextEnemy < game.time.now) {
+
+			//Define some variables were going to use
+			var start = 4000, end = 1000, score = 100;
+
+			//Formula to decrease the delay between enemies over time
+			//at first its 4000ms then slowly reaches 1000 ms
+			
+			var delay = Math.max(start - (start - end) * game.global.score/score, end);
+			//We Add an enemy
+			this.addEnemy();
+
+			//And we update the nextEnemy variable t have a new enemy in 2.2 seconds
+			this.nextEnemy = game.time.now + delay;
+		}
 
 		if (!this.player.inWorld) {
 			this.playerDie();
