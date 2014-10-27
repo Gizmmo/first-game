@@ -195,10 +195,3 @@ var playState = {
 	}
 
 };
-// We initialising Phaser
-var game = new Phaser.Game(500, 340, Phaser.AUTO, 'gameDiv');
-
-
-// And finally we tell Phaser to add and start our 'main' state
-game.state.add('main', mainState);
-game.state.start('main');
