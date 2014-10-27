@@ -1,35 +1,35 @@
 var menuState = {
 	create: function() {
-
 		this.loadLocalStorage();
 		this.setHighScore();
 		this.createBackgroundImage();
 		this.setUpMenuLabels();
 		this.setUpInput();
-
-		//Add the mute button that calls the toggleSound function when pressed
-		this.muteButton = game.add.button(20, 20, 'mute', this.toggleSound, this);
-
-		//If the mouse is over the button it becomes a hand cursor
-		this.muteButton.input.useHandCursor = true;
-
-		//If the game is already muted
-		if (game.sound.mute) {
-			//Change the frame to already display the mute symbol
-			this.muteButton.frame = 1;
-		}
+		this.setUpMute();
 	},
 
+	/**
+	 * Creates a background image behind the menu
+	 * @return {void} No Return Value
+	 */
 	createBackgroundImage: function() {
 		//Add a background image
 		game.add.image(0, 0, 'background');
 	},
 
+	/**
+	 * Starts the next state
+	 * @return {void} No return value
+	 */
 	start: function() {
 		//Start the actual game
 		game.state.start('play');
 	},
 
+	/**
+	 * Toggles the sound on and off when called
+	 * @return {void} No Return Value
+	 */
 	toggleSound: function() {
 		//Switch the Pahser sound variable from true to flase, or false
 		//to true.
@@ -39,6 +39,10 @@ var menuState = {
 		this.muteButton.frame = game.sound.mute ? 1 : 0;
 	},
 
+	/**
+	 * Loads need variables from local storage
+	 * @return {void} No Return Value
+	 */
 	loadLocalStorage: function() {
 
 		//If bestScore is not defined it
@@ -49,6 +53,9 @@ var menuState = {
 		}
 	},
 
+	/**
+	 * Sets the new highscore into localStorage
+	 */
 	setHighScore: function() {
 		//If the score is higher then the best score
 		if (game.global.score > localStorage.getItem('bestScore')) {
@@ -57,6 +64,9 @@ var menuState = {
 		}
 	},
 
+	/**
+	 * Sets up the labels seen on the front of the menu, as well as their animations
+	 */
 	setUpMenuLabels: function() {
 		//Display the name of the game
 		var nameLabel = game.add.text(game.world.centerX, -50, 'Super Coin Box', {
@@ -78,10 +88,12 @@ var menuState = {
 		})
 		scoreLabel.anchor.setTo(0.5, 0.5);
 
-
+		//Has the text customize
 		if (game.device.desktop) {
+			//If the device is a desktop
 			text = 'press the up arrow key to start';
 		} else {
+			//If the device is a mobile
 			var text = 'touch the screen to start';
 		}
 
@@ -92,6 +104,7 @@ var menuState = {
 		});
 		startLabel.anchor.setTo(0.5, 0.5);
 
+		//Rotates the text left and right forever
 		game.add.tween(startLabel).to({
 			angle: -2
 		}, 500).to({
@@ -99,6 +112,9 @@ var menuState = {
 		}, 500).loop().start();
 	},
 
+	/**
+	 * Sets up the menu to accept a specific input to start the game and load the next state
+	 */
 	setUpInput: function() {
 		//Store the up arrow into a variable
 		var upKey = game.input.keyboard.addKey(Phaser.Keyboard.UP);
@@ -107,5 +123,22 @@ var menuState = {
 		upKey.onDown.addOnce(this.start, this);
 		//Used for touch events
 		game.input.onDown.addOnce(this.start, this)
+	},
+
+	/**
+	 * Initalizes and has the mute button in the top left to react to player input
+	 */
+	setUpMute: function() {
+		//Add the mute button that calls the toggleSound function when pressed
+		this.muteButton = game.add.button(20, 20, 'mute', this.toggleSound, this);
+
+		//If the mouse is over the button it becomes a hand cursor
+		this.muteButton.input.useHandCursor = true;
+
+		//If the game is already muted
+		if (game.sound.mute) {
+			//Change the frame to already display the mute symbol
+			this.muteButton.frame = 1;
+		}
 	}
 }
