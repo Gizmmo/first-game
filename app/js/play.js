@@ -174,6 +174,10 @@ var playState = {
 	},
 
 	playerDie: function() {
+
+		if(!this.player.alive) {
+			return;
+		}
 		//Kill the player to make it dissappear from the screen
 		this.player.kill();
 
