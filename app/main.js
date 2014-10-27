@@ -124,20 +124,52 @@ var mainState = {
 	},
 
 	takeCoin: function(player, coin) {
-		//Kill the coin to make it disappear from the game
-		this.coin.kill();
 
 		//Increase score by 5
 		this.score += 5;
 
 		//Update the score label
 		this.scoreLabel.text = 'score: ' + this.score;
+
+		//Change the coin position
+		this.updateCoinPosition();
 	},
 
-	// updateCoinPosition: function() {
-	// 	var coinPosition = [
-	// 	{x: 140, y: 60}]
-	// }
+	updateCoinPosition: function() {
+		var coinPosition = [{
+			x: 140,
+			y: 60
+		}, {
+			x: 360,
+			y: 60
+		}, {
+			x: 60,
+			y: 140
+		}, {
+			x: 440,
+			y: 140
+		}, {
+			x: 130,
+			y: 300
+		}, {
+			x: 370,
+			y: 300
+		}];
+
+		//Remove the current coin position from the array, otherwise the coin could 
+		//appear in the same position twice in a row
+		for (var i = 0; i < coinPosition.length; i++) {
+			if (coinPosition[i].x === this.coin.x) {
+				coinPosition.splice(i, 1);
+			}
+		}
+
+		//Randomly select a position from the array
+		var newPosition = coinPosition[game.rnd.integerInRange(0, coinPosition.length-1)];
+
+		//Set the new position of the coin
+		this.coin.reset(newPosition.x, newPosition.y);
+	}
 
 };
 // We initialising Phaser
