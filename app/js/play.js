@@ -32,9 +32,12 @@ var playState = {
 
 		this.spawnEnemy();
 
-		this.playerDie();
+		this.checkIsPlayerAlive();
 	},
 
+	/**
+	 * Adds a single enemy to the world if there is one that is dead
+	 */
 	addEnemy: function() {
 		//Get the first dead enemy of the group
 		var enemy = this.enemies.getFirstDead();
@@ -54,6 +57,9 @@ var playState = {
 		enemy.outOfBoundsKill = true;
 	},
 
+	/**
+	 * Adds animations to player object for movement left and right
+	 */
 	addPlayerAnimations: function() {
 		//Create the 'right' animation of the player by looping frames 1 and 2
 		this.player.animations.add('right', [1, 2], 8, true);
@@ -62,12 +68,29 @@ var playState = {
 		this.player.animations.add('left', [3, 4], 8, true);
 	},
 
+	/**
+	 * Adds sounds to the audio library in game
+	 */
 	addSounds: function() {
 		this.jumpSound = game.add.audio('jump');
 		this.coinSound = game.add.audio('coin');
 		this.deadSound = game.add.audio('dead');
 	},
 
+	/**
+	 * Checks to see if the player is currently in the game world.  If not, have him die
+	 * @return {void} No return Value
+	 */
+	checkIsPlayerAlive: function() {
+		if (!this.player.inWorld) {
+			this.playerDie();
+		}
+	},
+
+	/**
+	 * Creates a coin in the game world
+	 * @return {void} No Return Value
+	 */
 	createCoin: function() {
 		//Display the coin
 		this.coin = game.add.sprite(60, 140, 'coin');
@@ -79,6 +102,10 @@ var playState = {
 		this.coin.anchor.setTo(0.5, 0.5);
 	},
 
+	/**
+	 * Creates a particle emitter to be used on a players death
+	 * @return {void} No return Value
+	 */
 	createEmitter: function() {
 		//Create the emitter with 15 particles.  We dont need to set the x and y
 		//since we don't know where to do the explosion yet
@@ -98,6 +125,10 @@ var playState = {
 		this.emitter.gravity = 0;
 	},
 
+	/**
+	 * Creates the enemies group, and sets up the nextEnemy variable for the timer
+	 * @return {void} No Return Value
+	 */
 	createEnemies: function() {
 		this.enemies = game.add.group();
 		this.enemies.enableBody = true;
@@ -110,6 +141,10 @@ var playState = {
 		this.nextEnemy = 0;
 	},
 
+	/**
+	 * Creates the inputs that a user can use to traverse the game world
+	 * @return {void} No return value
+	 */
 	createKeyInputs: function() {
 		this.cursor = game.input.keyboard.createCursorKeys();
 
@@ -123,6 +158,10 @@ var playState = {
 		}
 	},
 
+	/**
+	 * Creates the actual player object and puts him in the game world with gravity
+	 * @return {void} No return value
+	 */
 	createPlayer: function() {
 		this.player = game.add.sprite(game.world.centerX, game.world.centerY, 'player');
 		this.player.anchor.setTo(0.5, 0.5);
@@ -134,6 +173,10 @@ var playState = {
 		this.player.body.gravity.y = 500;
 	},
 
+	/**
+	 * Creates a score label at the top of the screen, and sets the global score to 0
+	 * @return {void} No Return Value
+	 */
 	createScore: function() {
 		//Display the score
 		this.scoreLabel = game.add.text(30, 30, 'score: 0', {
@@ -144,6 +187,10 @@ var playState = {
 		game.global.score = 0;
 	},
 
+	/**
+	 * Creates the tiled map to the game world, and sets up collisions
+	 * @return {[type]} [description]
+	 */
 	createWorld: function() {
 		//Create the tilemap
 		this.map = game.add.tilemap('map');
@@ -161,6 +208,10 @@ var playState = {
 		this.map.setCollision(1);
 	},
 
+	/**
+	 * Used for converting user inputs to moving the physical player
+	 * @return {[type]} [description]
+	 */
 	movePlayer: function() {
 		//If the left arrow key is pressed
 		if (this.cursor.left.isDown || this.wasd.left.isDown) {
@@ -192,26 +243,27 @@ var playState = {
 		}
 	},
 
+	/**
+	 * Checks to see if the player has
+	 * @return {[type]} [description]
+	 */
 	playerDie: function() {
-		if (!this.player.inWorld) {
-
-			if (!this.player.alive) {
-				return;
-			}
-			//Kill the player to make it dissappear from the screen
-			this.player.kill();
-
-			//Start the sound and particles
-			this.deadSound.play();
-			this.emitter.x = this.player.x;
-			this.emitter.y = this.player.y;
-
-			//Start the emitter, by exploding 15 particles that will live for 600ms
-			this.emitter.start(true, 600, null, 15);
-
-			//Cal the startMenu function after 1000ms
-			game.time.events.add(1000, this.startMenu, this);
+		if (!this.player.alive) {
+			return;
 		}
+		//Kill the player to make it dissappear from the screen
+		this.player.kill();
+
+		//Start the sound and particles
+		this.deadSound.play();
+		this.emitter.x = this.player.x;
+		this.emitter.y = this.player.y;
+
+		//Start the emitter, by exploding 15 particles that will live for 600ms
+		this.emitter.start(true, 600, null, 15);
+
+		//Cal the startMenu function after 1000ms
+		game.time.events.add(1000, this.startMenu, this);
 	},
 
 	spawnEnemy: function() {
