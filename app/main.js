@@ -11,6 +11,7 @@ var mainState = {
 		game.load.image('player', 'assets/player.png');
 		game.load.image('wallV', 'assets/wallVertical.png');
 		game.load.image('wallH', 'assets/wallHorizontal.png');
+		game.load.image('coin', 'assets/coin.png');
 
 	},
 	create: function() {
@@ -26,6 +27,15 @@ var mainState = {
 		 this.player.anchor.setTo(0.5, 0.5);
 		 this.cursor = game.input.keyboard.createCursorKeys();
 		 this.createWorld();
+
+		 //Display the coin
+		 this.coin = game.add.sprite(60, 140, 'coin');
+
+		 //Add Arcade Physics to coin
+		 game.physics.arcade.enable(this.coin);
+
+		 //Set the anchor point of the coin to the center
+		 this.coin.anchor.setTo(0.5, 0.5);
 
 		 //Tell Phaser that the player will use the Arcade physics engine
 		 game.physics.arcade.enable(this.player);
