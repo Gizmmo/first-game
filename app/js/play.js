@@ -83,7 +83,7 @@ var playState = {
 			left: game.input.keyboard.addKey(Phaser.Keyboard.A),
 			right: game.input.keyboard.addKey(Phaser.Keyboard.D)
 		}
-		
+
 	},
 
 	update: function() {
@@ -91,11 +91,11 @@ var playState = {
 		// It contains the game's logic
 
 		//Tell Phaser that the player and walls should collide
-		game.physics.arcade.collide(this.player, this.walls);
+		game.physics.arcade.collide(this.player, this.layer);
 		game.physics.arcade.overlap(this.player, this.coin, this.takeCoin, null, this);
 
 		//Make the enemies and walls collide
-		game.physics.arcade.collide(this.enemies, this.walls);
+		game.physics.arcade.collide(this.enemies, this.layer);
 
 		//call the playerDie function when the player and enemy overlap
 		game.physics.arcade.overlap(this.player, this.enemies, this.playerDie, null, this);
@@ -144,29 +144,20 @@ var playState = {
 	},
 
 	createWorld: function() {
-		//Create our wall group with Arcade physics
-		this.walls = game.add.group();
-		this.walls.enableBody = true;
+		//Create the tilemap
+		this.map = game.add.tilemap('map');
 
-		//Create the 10 walls
-		game.add.sprite(0, 0, 'wallV', 0, this.walls); //Left
-		game.add.sprite(480, 0, 'wallV', 0, this.walls); //Left
+		//Add the tileset to the map
+		this.map.addTilesetImage('tileset');
 
-		game.add.sprite(0, 0, 'wallH', 0, this.walls); //Top left
-		game.add.sprite(300, 0, 'wallH', 0, this.walls); //Top right
-		game.add.sprite(0, 320, 'wallH', 0, this.walls); //Bottom left
-		game.add.sprite(300, 320, 'wallH', 0, this.walls); //Bottom Right
+		//Create the layer, by specifying the name of the tiled layer
+		this.layer = this.map.createLayer('Tile Layer 1');
 
-		game.add.sprite(-100, 160, 'wallH', 0, this.walls); //Middle left
-		game.add.sprite(400, 160, 'wallH', 0, this.walls); //Middle Right
+		//Set the world size to match the size of the layer
+		this.layer.resizeWorld();
 
-		var middleTop = game.add.sprite(100, 80, 'wallH', 0, this.walls);
-		middleTop.scale.setTo(1.5, 1);
-		var middleBottom = game.add.sprite(100, 240, 'wallH', 0, this.walls);
-		middleBottom.scale.setTo(1.5, 1);
-
-		//Set all the walls to be immovable
-		this.walls.setAll('body.immovable', true);
+		//Enable collisions for the first element of our tileset
+		this.map.setCollision(1);
 	},
 
 	movePlayer: function() {
@@ -193,7 +184,7 @@ var playState = {
 		}
 
 		//If the up arrow key is pressed and the player is touching the ground
-		if ((this.cursor.up.isDown || this.wasd.up.isDown) && this.player.body.touching.down) {
+		if ((this.cursor.up.isDown || this.wasd.up.isDown) && this.player.body.onFloor()) {
 			//Move the player upward (jump)
 			this.player.body.velocity.y = -320;
 			this.jumpSound.play();
